@@ -25,7 +25,7 @@ int main(){
             insert(linkedList, data, index);
         } else if (cmd == 'r') {                                                      // remove
             int index = strtol(strtok(NULL, " "),NULL, 10);
-            //do more here
+            removeIdx(linkedList,index);
         } else if (cmd == 'f'){                                                       // find
             int index = strtol(strtok(NULL, " "), NULL,10);
             //do more here

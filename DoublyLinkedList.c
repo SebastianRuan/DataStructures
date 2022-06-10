@@ -58,7 +58,23 @@ void insert(struct DoublyLinkedList* lList, int data, int index){
     current->next = newNode;
     newNode->prev = current;
     newNode->next = tmp;
-    tmp->prev = newNode;
+    if(tmp != NULL) tmp->prev = newNode;
+}
+
+void removeIdx(DoublyLinkedList* lList, int index){
+    Node* current = lList->head;
+    for (int count = 0; count < index; ++count) {
+        current = current->next;
+    }
+
+    if(current->prev != NULL){
+        current->prev->next = current->next;
+    } else { lList->head = current->next; }
+
+    if(current->next != NULL){
+        current->next->prev = current->prev;
+    } else { lList->tail = current->prev; }
+    free(current);
 }
 
 void printList(DoublyLinkedList* lList){

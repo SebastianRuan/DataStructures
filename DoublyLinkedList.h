@@ -36,6 +36,7 @@ DoublyLinkedList* lListInit();
  *               at 0.
  */
 void insert(DoublyLinkedList* lList, int data, int index);
+void removeIdx(DoublyLinkedList* lList, int index);
 void printList(DoublyLinkedList* lList);
 void destroy(DoublyLinkedList* lList);
 

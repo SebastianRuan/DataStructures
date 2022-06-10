@@ -1,3 +1,5 @@
 addFront
-addBack
+addRmvBack
 addMiddle
+removeMiddle
+removeFront

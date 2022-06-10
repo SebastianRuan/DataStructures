@@ -4,7 +4,7 @@ program="$2"
 path=$(dirname $suite_file)/
 echo $path/
 allPassed=1
-
+count=0
 
 #test for correct number of arguments passed to script
 if [ $# -ne 2 ]; then
@@ -12,8 +12,10 @@ if [ $# -ne 2 ]; then
 	exit 1
 fi
 
+true > memory_leaks.txt
 #for every testfile in suite_file find the associated .in file and run program with .in file contents as input
 for testfile in $(cat $suite_file); do
+  ((count=count+1))
 	if [[ -r "$path$testfile.in" && -f "$path$testfile.in" ]]; then #test for file existance
 		
 		if [[ -r "$path$testfile.out" && -f "$path$testfile.out" ]]; then
@@ -25,8 +27,8 @@ for testfile in $(cat $suite_file); do
 			fi
 
 			actualOutput=$(mktemp)
-			$program$arguments < "$path$testfile.in" > $actualOutput #execute program with testing input and put computed value into temp file ($actualOutput)
-			diff $actualOutput "$path$testfile.out" > /dev/null #compare files
+			valgrind --leak-check=yes "$program$arguments" < "$path$testfile.in" > "$actualOutput" 2>> memory_leaks.txt #execute program with testing input and put computed value into temp file ($actualOutput)
+			diff "$actualOutput" "$path$testfile.out" > /dev/null #compare files
 			
 			if [ $? -ne 0 ]; then #if diff does not return 0 then there is a difference between actual output and .out file
 				allPassed=0
@@ -37,6 +39,8 @@ for testfile in $(cat $suite_file); do
 				cat "$path$testfile.out"
 				echo "Actual:"
 				cat $actualOutput
+			else
+			  echo "$testfile passed"
 			fi
 
 		  rm "$actualOutput"
@@ -51,6 +55,8 @@ for testfile in $(cat $suite_file); do
 	fi
 done
 
-if [ $allPassed -eq 1 ]; then
+if [ "$(grep -o 'no leaks are possible' memory_leaks.txt | wc -l)" -ne $count ]; then
+  echo "MEMORY LEAK"
+elif [ $allPassed -eq 1 ]; then
   echo "ALL TESTS PASSED"
 fi
