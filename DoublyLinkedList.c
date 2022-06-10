@@ -74,7 +74,20 @@ void removeIdx(DoublyLinkedList* lList, int index){
     if(current->next != NULL){
         current->next->prev = current->prev;
     } else { lList->tail = current->prev; }
+
+    --(lList->len);
     free(current);
+}
+
+int find(DoublyLinkedList* lList, int data){
+    int count = 0;
+    Node* current = lList->head;
+    while(current != NULL){
+        if(current->item == data) return count;
+        current = current->next;
+        ++count;
+    }
+    return -1;
 }
 
 void printList(DoublyLinkedList* lList){

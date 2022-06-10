@@ -34,9 +34,13 @@ DoublyLinkedList* lListInit();
  * Operations:
  *      insert - adds data at the index'th position in lList. Indexes start
  *               at 0.
+ *      remove - deletes an item in lList at index
+ *
+ *      find   - returns the index of data in lList. Returns -1 if not found.
  */
 void insert(DoublyLinkedList* lList, int data, int index);
 void removeIdx(DoublyLinkedList* lList, int index);
+int find(DoublyLinkedList* lList, int data);
 void printList(DoublyLinkedList* lList);
 void destroy(DoublyLinkedList* lList);
 

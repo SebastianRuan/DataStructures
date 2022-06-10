@@ -27,8 +27,9 @@ int main(){
             int index = strtol(strtok(NULL, " "),NULL, 10);
             removeIdx(linkedList,index);
         } else if (cmd == 'f'){                                                       // find
-            int index = strtol(strtok(NULL, " "), NULL,10);
-            //do more here
+            int data  = strtol(strtok(NULL, " "), NULL,10);
+            int idx = find(linkedList, data);
+            printf("f d:%d i:%d\n", data, idx);
         } else if (cmd == 'q'){
             break;
         }
