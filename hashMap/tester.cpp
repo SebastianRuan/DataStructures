@@ -23,7 +23,7 @@ int main(){
         } else if (cmd == "r") {                                                      // remove
             string data;
             line_stream >> data;
-//            line_stream.removeIdx(data);
+            hmap.remove(data);
         } else if (cmd == "f"){                                                       // find
             string data;
             line_stream >> data;

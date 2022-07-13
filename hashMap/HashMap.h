@@ -29,15 +29,18 @@ class HashMap{
 
 public:
     /*
-     * HashMap creates a table with 113 entries by default
-     * HashMap(capacity) creates a table with a specified capacity
-     * insert(data) adds a string to the hashtable
-     * contains(data) determines if data is in the hashtable
+     * HashMap creates a table with 113 entries by default.
+     * HashMap(capacity) creates a table with a specified capacity.
+     * insert(data) adds a string to the hashtable.
+     * contains(data) determines if data is in the hashtable.
+     * remove(data) deletes data form the hash table. If data is
+     *     not present, no changes are made to the map.
      */
     HashMap();
     HashMap(int capacity);
     void insert(const std::string& data);
     bool contains(const std::string& data);
+    void remove(const std::string& data);
     ~HashMap();
 };
 

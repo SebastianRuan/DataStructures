@@ -96,6 +96,17 @@ bool HashMap::contains(const std::string &data) {
     return data == arr[indices[0]].second || data == arr[indices[1]].second;
 }
 
+void HashMap::remove(const std::string &data) {
+    unsigned long long key = 0;
+    vector<int> indices = get_indices(data, key);
+
+    if(data == arr[indices[0]].second){
+        arr[indices[0]] = pair<unsigned long long, string>(0,"");
+    } else if(data == arr[indices[1]].second){
+        arr[indices[1]] = pair<unsigned long long, string>(0,"");
+    }
+}
+
 HashMap::~HashMap(){
     delete[] arr;
 }
