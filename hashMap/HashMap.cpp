@@ -9,35 +9,35 @@ using namespace std;
 
 void HashMap::clear_table() {
     for (int i = 0; i < capacity; ++i) {
-        arr[i] = pair<unsigned long int, string>(0,"");
+        arr[i] = pair<unsigned long long, string>(0,"");
     }
 }
 
-HashMap::HashMap():arr(new pair<unsigned long int, string> [113]), capacity(113), count(0) {
+HashMap::HashMap():arr(new pair<unsigned long long, string> [113]), capacity(113), count(0) {
     clear_table();
 }
 
-HashMap::HashMap(int capacity):arr(new pair<unsigned long int, string>[capacity]), capacity(capacity), count(0) {
+HashMap::HashMap(int capacity):arr(new pair<unsigned long long, string>[capacity]), capacity(capacity), count(0) {
     clear_table();
 }
 
 // flatten converts value into a number which will be used to insert value into the hash map
-unsigned long int HashMap::flatten(std::string value){
-    unsigned long int key = 0;
+unsigned long long HashMap::flatten(std::string value){
+    unsigned long long key = 0;
     for (int i = 0; i < value.length(); ++i) {
         int charNum = value[i] - 31;
-        key += charNum * (unsigned long int) pow(32, value.length()-i-1);
+        key += charNum * (unsigned long long) pow(32, value.length()-i-1);
     }
     return key;
 }
 
-int HashMap::hash1(unsigned long int key){ return key % capacity;}
-int HashMap::hash2(unsigned long int key){
+int HashMap::hash1(unsigned long long key){ return key % capacity;}
+int HashMap::hash2(unsigned long long key){
     return floor(capacity * (double) (phi * key - floor(phi*key)));
 }
 
-int HashMap::cuckooHash(std::vector<int> indices, unsigned long int key, const string& value){
-    auto newEntry = pair<unsigned long int, string>(key,value);
+int HashMap::cuckooHash(std::vector<int> indices, unsigned long long key, const string& value){
+    auto newEntry = pair<unsigned long long, string>(key,value);
     int hashFn = 0;
     for (int i = 0; i < 2 * capacity; ++i) {
         int idx = indices[hashFn];
@@ -48,6 +48,8 @@ int HashMap::cuckooHash(std::vector<int> indices, unsigned long int key, const s
             auto tmp = arr[idx];
             arr[idx] = newEntry;
             newEntry = tmp;
+            indices[0] = hash1(newEntry.first);
+            indices[1] = hash2(newEntry.first);
         }
         hashFn = 1 - hashFn;
     }
@@ -63,15 +65,20 @@ int HashMap::cuckooHash(std::vector<int> indices, unsigned long int key, const s
 }
 
 
+// get_indices calculates the two possible indices of data
+vector<int> HashMap::get_indices(const string& data, unsigned long long& key){
+    key = flatten(data);
+    return vector<int>({hash1(key), hash2(key)});
+}
 
 void HashMap::insert(const string& data){
     ++count;
-    unsigned long int key = flatten(data);
-    vector<int> indices = vector<int>({hash1(key), hash2(key)});
+    unsigned long long key = 0;
+    vector<int> indices = get_indices(data, key);
 
     if (cuckooHash(indices, key, data) || (count+1) / (double) capacity >= 0.25 ){
-        std::pair<unsigned long int, std::string>* old_arr = arr;
-        arr = new pair<unsigned long int, string> [113];
+        std::pair<unsigned long long, std::string>* old_arr = arr;
+        arr = new pair<unsigned long long, string> [113];
         capacity = capacity * 2;
 
         for (int i = 0; i < capacity / 2; ++i) {
@@ -81,6 +88,12 @@ void HashMap::insert(const string& data){
         }
         delete[] old_arr;
     }
+}
+
+bool HashMap::contains(const std::string &data) {
+    unsigned long long key = 0;
+    vector<int> indices = get_indices(data, key);
+    return data == arr[indices[0]].second || data == arr[indices[1]].second;
 }
 
 HashMap::~HashMap(){

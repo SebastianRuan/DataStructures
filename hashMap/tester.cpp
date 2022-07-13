@@ -27,8 +27,11 @@ int main(){
         } else if (cmd == "f"){                                                       // find
             string data;
             line_stream >> data;
-//            int idx = find(hmap, data);
-//            printf("f d:%d i:%d\n", data, idx);
+            if (hmap.contains(data)){
+                cout << "t" << endl;
+            } else {
+                cout << "f" << endl;
+            }
         } else if (cmd == "q"){
             break;
         }
